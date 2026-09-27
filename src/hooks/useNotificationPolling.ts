@@ -21,6 +21,8 @@ export function useNotificationPolling() {
   const config = useChatStore(state => state.config)
   const chatId = useChatStore(state => state.chatId)
   const addMessage = useChatStore(state => state.addMessage)
+  const setRecipientName = useChatStore(state => state.setRecipientName)
+  const setInstanceState = useChatStore(state => state.setInstanceState)
   const setPollingError = useChatStore(state => state.setPollingError)
 
   useEffect(() => {
@@ -45,7 +47,18 @@ export function useNotificationPolling() {
           const text = getIncomingText(body)
           const isCurrentChat = isNotificationFromChat(body, chatId)
 
+          if (body.typeWebhook === 'stateInstanceChanged' && body.stateInstance) {
+            setInstanceState(body.stateInstance)
+          }
+
           if (isCurrentChat && text) {
+            const senderName =
+              body.senderData?.senderContactName?.trim() ||
+              body.senderData?.senderName?.trim() ||
+              body.senderData?.chatName?.trim()
+
+            if (senderName) setRecipientName(senderName)
+
             addMessage({
               id: body.idMessage || `incoming-${receiptId}`,
               text,
@@ -70,5 +83,12 @@ export function useNotificationPolling() {
       isActive = false
       controller.abort()
     }
-  }, [addMessage, chatId, config, setPollingError])
+  }, [
+    addMessage,
+    chatId,
+    config,
+    setInstanceState,
+    setPollingError,
+    setRecipientName,
+  ])
 }

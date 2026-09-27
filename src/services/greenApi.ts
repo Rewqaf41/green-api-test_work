@@ -1,8 +1,10 @@
 import axios from 'axios'
 import type {
+  ContactInfo,
   GreenApiConfig,
   Notification,
   SendMessageResponse,
+  StateInstanceResponse,
 } from '../types/chat'
 
 const RECEIVE_TIMEOUT_SECONDS = 60
@@ -25,6 +27,32 @@ export async function sendMessage(
     buildMethodUrl(config, 'sendMessage'),
     { chatId, message },
     { headers: { 'Content-Type': 'application/json' } },
+  )
+
+  return data
+}
+
+export async function getContactInfo(
+  config: GreenApiConfig,
+  chatId: string,
+  signal?: AbortSignal,
+) {
+  const { data } = await axios.post<ContactInfo>(
+    buildMethodUrl(config, 'getContactInfo'),
+    { chatId },
+    { signal, headers: { 'Content-Type': 'application/json' } },
+  )
+
+  return data
+}
+
+export async function getStateInstance(
+  config: GreenApiConfig,
+  signal?: AbortSignal,
+) {
+  const { data } = await axios.get<StateInstanceResponse>(
+    buildMethodUrl(config, 'getStateInstance'),
+    { signal },
   )
 
   return data

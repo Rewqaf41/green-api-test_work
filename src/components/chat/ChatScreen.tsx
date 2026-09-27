@@ -1,3 +1,5 @@
+import { useContactInfo } from '../../hooks/useContactInfo'
+import { useInstanceState } from '../../hooks/useInstanceState'
 import { useSendMessage } from '../../hooks/useSendMessage'
 import { getApiErrorMessage } from '../../services/greenApi'
 import { useChatStore } from '../../store/chatStore'
@@ -11,9 +13,17 @@ type ChatScreenProps = {
 
 export function ChatScreen({ onDisconnect }: ChatScreenProps) {
   const chatId = useChatStore(state => state.chatId)
+  const recipientName = useChatStore(state => state.recipientName)
+  const notifiedInstanceState = useChatStore(state => state.instanceState)
   const messages = useChatStore(state => state.messages)
   const pollingError = useChatStore(state => state.pollingError)
+  const contactQuery = useContactInfo()
+  const instanceStateQuery = useInstanceState()
   const sendMutation = useSendMessage()
+  const contactName =
+    recipientName ||
+    contactQuery.data?.contactName?.trim() ||
+    contactQuery.data?.name?.trim()
   const sendError = sendMutation.error
     ? getApiErrorMessage(sendMutation.error)
     : ''
@@ -22,7 +32,12 @@ export function ChatScreen({ onDisconnect }: ChatScreenProps) {
     <main className="grid h-screen grid-rows-[auto_minmax(0,1fr)_auto] bg-[#f5f6fa]">
       <ChatHeader
         chatId={chatId}
-        hasConnectionError={Boolean(pollingError)}
+        contactName={contactName}
+        avatarUrl={contactQuery.data?.avatar}
+        isContactLoading={!contactName && contactQuery.isPending}
+        instanceState={notifiedInstanceState || instanceStateQuery.data?.stateInstance || null}
+        isInstanceStateLoading={instanceStateQuery.isPending}
+        hasConnectionError={Boolean(pollingError || instanceStateQuery.error)}
         onDisconnect={onDisconnect}
       />
       <MessageList messages={messages} />
