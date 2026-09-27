@@ -4,10 +4,10 @@ import type { SubmitEvent } from 'react'
 import {
   connectionSchema,
   type ConnectionFormData,
-} from '../../schemas/connectionSchema'
-import type { ConnectionData } from '../../types/chat'
-import { formatRussianPhoneInput, phoneToChatId } from '../../utils/phone'
-import { FormField } from './FormField'
+} from '../../../schemas/connectionSchema'
+import type { ConnectionData } from '../../../types/chat'
+import { formatRussianPhoneInput, phoneToChatId } from '../../../utils/phone'
+import { FormField } from '../../ui/FormField'
 
 const initialForm: ConnectionFormData = {
   apiUrl: 'https://api.green-api.com',

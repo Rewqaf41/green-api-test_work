@@ -1,6 +1,6 @@
+import { Send } from 'lucide-react'
 import { useState } from 'react'
 import type { KeyboardEvent, SubmitEvent } from 'react'
-import { Send } from 'lucide-react'
 
 type MessageComposerProps = {
   error: string

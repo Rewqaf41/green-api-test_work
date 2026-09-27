@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { ConnectionScreen } from '../components/connection/ConnectionScreen'
+import { ConnectionScreen } from '../components/el/connection/ConnectionScreen'
 import { useChatStore } from '../store/chatStore'
 import type { ConnectionData } from '../types/chat'
 

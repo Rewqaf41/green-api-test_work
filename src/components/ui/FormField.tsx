@@ -1,5 +1,5 @@
 type FormFieldProps = {
-  name: keyof import('../../schemas/connectionSchema').ConnectionFormData
+  name: string
   label: string
   value: string
   placeholder: string

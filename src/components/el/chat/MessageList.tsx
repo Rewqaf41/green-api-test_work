@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Check, CheckCheck, CircleAlert, MessageCircle } from 'lucide-react'
-import type { ChatMessage, MessageStatus } from '../../types/chat'
-import { formatMessageTime } from '../../utils/date'
+import type { ChatMessage, MessageStatus } from '../../../types/chat'
+import { formatMessageTime } from '../../../utils/date'
 
 type MessageListProps = { messages: ChatMessage[] }
 

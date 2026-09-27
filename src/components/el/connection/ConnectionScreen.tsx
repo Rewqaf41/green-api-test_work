@@ -1,4 +1,4 @@
-import type { ConnectionData } from '../../types/chat'
+import type { ConnectionData } from '../../../types/chat'
 import { ConnectionForm } from './ConnectionForm'
 import { ConnectionHero } from './ConnectionHero'
 

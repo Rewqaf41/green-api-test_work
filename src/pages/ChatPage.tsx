@@ -1,5 +1,5 @@
 import { Navigate, useNavigate } from 'react-router-dom'
-import { ChatScreen } from '../components/chat/ChatScreen'
+import { ChatScreen } from '../components/el/chat/ChatScreen'
 import { useChatStore } from '../store/chatStore'
 
 export function ChatPage() {

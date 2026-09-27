@@ -1,7 +1,7 @@
 import { LogOut } from 'lucide-react'
-import type { InstanceState } from '../../types/chat'
-import { formatChatPhone } from '../../utils/phone'
-import { ContactNameSkeleton } from './ContactNameSkeleton'
+import type { InstanceState } from '../../../types/chat'
+import { formatChatPhone } from '../../../utils/phone'
+import { Skeleton } from '../../ui/Skeleton'
 
 type ChatHeaderProps = {
   chatId: string
@@ -42,7 +42,10 @@ export function ChatHeader({
         </div>
         <div>
           {isContactLoading ? (
-            <ContactNameSkeleton />
+            <Skeleton
+              className="mb-1 h-4 w-36 md:h-5 md:w-44"
+              label="Загрузка имени контакта"
+            />
           ) : (
             <h1 className="mb-1 text-sm font-bold tracking-[-.02em] md:text-base">
               {contactName || 'Чат для MAX / WhatsApp / Telegram'}
