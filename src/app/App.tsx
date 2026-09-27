@@ -1,8 +1,11 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { useNotificationPolling } from '../hooks/useNotificationPolling'
 import { ChatPage } from '../pages/ChatPage'
 import { ConnectionPage } from '../pages/ConnectionPage'
 
 export function App() {
+  useNotificationPolling()
+
   return (
     <Routes>
       <Route path="/" element={<ConnectionPage />} />
