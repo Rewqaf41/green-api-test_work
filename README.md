@@ -1,35 +1,68 @@
-# React + TypeScript + Vite
+# GREEN-API Chat
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React-интерфейс чата для MAX / WhatsApp / Telegram через GREEN-API.
 
-Currently, two official plugins are available:
+## Стек
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19 + TypeScript + Vite;
+- Tailwind CSS 4;
+- Axios;
+- Zustand;
+- TanStack Query 5;
+- Lucide React;
+- React Router 7;
+- Zod 4.
 
-## React Compiler
+## Запуск
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+Выберите один пакетный менеджер.
 
-Note: This will impact Vite dev & build performances.
-You can also try the [experimental native React Compiler support](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+### Bun
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+bun install --frozen-lockfile
+bun run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+### npm
+
+```bash
+npm ci
+npm run dev
+```
+
+В форме подключения укажите `API URL`, `idInstance`, `apiTokenInstance` и номер телефона получателя в международном формате. Приложение преобразует номер в `chatId`; первое отправленное сообщение создаёт новый чат. Для получения ответов у инстанса должен быть пустой `webhookUrl` и включены входящие уведомления.
+
+Чтобы отображались статусы доставки, прочтения и изменения состояния инстанса, включите в настройках GREEN-API уведомления о сообщениях, отправленных через API, статусы исходящих сообщений и изменения состояния авторизации. Настройки применимы к MAX, WhatsApp и Telegram.
+
+Входящие уведомления получаются последовательным long polling через `ReceiveNotification` с таймаутом 60 секунд. После обработки каждое уведомление подтверждается методом `DeleteNotification`.
+
+## Структура
+
+```text
+src/
+├── app/          # корневой компонент и провайдеры
+├── components/   # экраны и UI-компоненты
+├── hooks/        # polling и отправка сообщений
+├── pages/        # страницы маршрутов / и /chat
+├── schemas/      # Zod-схемы валидации
+├── services/     # Axios-клиент GREEN-API
+├── store/        # Zustand store
+├── styles/       # Tailwind v4 и глобальная тема
+├── types/        # доменные типы
+└── utils/        # чистые вспомогательные функции
+```
+
+## Проверка
+
+```bash
+npm run lint
+npm run build
+```
+
+или через Bun:
+
+```bash
+bun run lint
+bun run build
+```
