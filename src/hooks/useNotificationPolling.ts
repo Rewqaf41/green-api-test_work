@@ -19,15 +19,15 @@ function wait(delay: number) {
 
 export function useNotificationPolling() {
   const config = useChatStore(state => state.config)
-  const chatId = useChatStore(state => state.chatId)
+  const ensureChat = useChatStore(state => state.ensureChat)
   const addMessage = useChatStore(state => state.addMessage)
   const updateMessageStatus = useChatStore(state => state.updateMessageStatus)
-  const setRecipientName = useChatStore(state => state.setRecipientName)
+  const setRecipientProfile = useChatStore(state => state.setRecipientProfile)
   const setInstanceState = useChatStore(state => state.setInstanceState)
   const setPollingError = useChatStore(state => state.setPollingError)
 
   useEffect(() => {
-    if (!config || !chatId) return
+    if (!config) return
 
     const controller = new AbortController()
     let isActive = true
@@ -46,7 +46,6 @@ export function useNotificationPolling() {
 
           const { body, receiptId } = notification
           const text = getIncomingText(body)
-          const isCurrentChat = isNotificationFromChat(body, chatId)
 
           if (body.typeWebhook === 'stateInstanceChanged' && body.stateInstance) {
             setInstanceState(body.stateInstance)
@@ -64,15 +63,28 @@ export function useNotificationPolling() {
             )
           }
 
-          if (isCurrentChat && text) {
+          const targetChat = useChatStore
+            .getState()
+            .chats.find(chat => isNotificationFromChat(body, chat.chatId))
+          const notificationChatId =
+            targetChat?.chatId ||
+            body.senderData?.chatId ||
+            body.senderData?.sender
+
+          if (notificationChatId && text) {
             const senderName =
               body.senderData?.senderContactName?.trim() ||
               body.senderData?.senderName?.trim() ||
               body.senderData?.chatName?.trim()
 
-            if (senderName) setRecipientName(senderName)
+            ensureChat(notificationChatId)
+            if (senderName) {
+              setRecipientProfile(notificationChatId, {
+                recipientName: senderName,
+              })
+            }
 
-            addMessage({
+            addMessage(notificationChatId, {
               id: body.idMessage || `incoming-${receiptId}`,
               text,
               direction: 'incoming',
@@ -98,11 +110,11 @@ export function useNotificationPolling() {
     }
   }, [
     addMessage,
-    chatId,
     config,
+    ensureChat,
     setInstanceState,
     setPollingError,
-    setRecipientName,
+    setRecipientProfile,
     updateMessageStatus,
   ])
 }

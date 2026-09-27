@@ -13,7 +13,7 @@ export function useSendMessage() {
       return sendMessage(config, chatId, text)
     },
     onSuccess: (result, text) => {
-      addMessage({
+      addMessage(chatId, {
         id: result.idMessage,
         text,
         direction: 'outgoing',

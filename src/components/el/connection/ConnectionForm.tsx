@@ -5,25 +5,27 @@ import {
   connectionSchema,
   type ConnectionFormData,
 } from '../../../schemas/connectionSchema'
-import type { ConnectionData } from '../../../types/chat'
+import type { ConnectionData, GreenApiConfig } from '../../../types/chat'
 import { formatRussianPhoneInput, phoneToChatId } from '../../../utils/phone'
 import { FormField } from '../../ui/FormField'
 
-const initialForm: ConnectionFormData = {
-  apiUrl: 'https://api.green-api.com',
-  idInstance: '',
-  apiTokenInstance: '',
-  recipientPhone: '+7',
-}
-
 type ConnectionFormProps = {
+  initialConfig: GreenApiConfig | null
   onConnect: (data: ConnectionData) => void
 }
 
 type FormErrors = Partial<Record<keyof ConnectionFormData, string>>
 
-export function ConnectionForm({ onConnect }: ConnectionFormProps) {
-  const [form, setForm] = useState(initialForm)
+export function ConnectionForm({
+  initialConfig,
+  onConnect,
+}: ConnectionFormProps) {
+  const [form, setForm] = useState<ConnectionFormData>(() => ({
+    apiUrl: initialConfig?.apiUrl || 'https://api.green-api.com',
+    idInstance: initialConfig?.idInstance || '',
+    apiTokenInstance: initialConfig?.apiTokenInstance || '',
+    recipientPhone: '+7',
+  }))
   const [errors, setErrors] = useState<FormErrors>({})
 
   function updateField(field: keyof ConnectionFormData, value: string) {
@@ -114,7 +116,7 @@ export function ConnectionForm({ onConnect }: ConnectionFormProps) {
 
       <p className="mt-5.5 flex items-center justify-center gap-2 text-[11px] text-[#9ba0b1]">
         <LockKeyhole className="size-3.5" aria-hidden="true" />
-        Данные используются только в текущей вкладке и не сохраняются.
+        Данные сохраняются локально в браузере до выхода из аккаунта.
       </p>
     </div>
   )

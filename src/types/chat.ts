@@ -36,6 +36,14 @@ export type ChatMessage = {
   statusDescription?: string
 }
 
+export type ChatThread = {
+  chatId: string
+  recipientName: string
+  avatarUrl: string
+  messages: ChatMessage[]
+  updatedAt: number
+}
+
 export type SendMessageResponse = {
   idMessage: string
 }
