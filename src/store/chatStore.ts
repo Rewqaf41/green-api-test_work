@@ -4,6 +4,7 @@ import type {
   ConnectionData,
   GreenApiConfig,
   InstanceState,
+  MessageStatus,
 } from '../types/chat'
 
 type ChatState = {
@@ -16,6 +17,11 @@ type ChatState = {
   connect: (data: ConnectionData) => void
   disconnect: () => void
   addMessage: (message: ChatMessage) => void
+  updateMessageStatus: (
+    id: string,
+    status: MessageStatus,
+    description?: string,
+  ) => void
   setRecipientName: (name: string) => void
   setInstanceState: (state: InstanceState) => void
   setPollingError: (message: string) => void
@@ -51,6 +57,14 @@ export const useChatStore = create<ChatState>()((set) => ({
       if (state.messages.some(item => item.id === message.id)) return state
       return { messages: [...state.messages, message] }
     }),
+  updateMessageStatus: (id, status, statusDescription) =>
+    set(state => ({
+      messages: state.messages.map(message =>
+        message.id === id
+          ? { ...message, status, statusDescription }
+          : message,
+      ),
+    })),
   setRecipientName: recipientName => set({ recipientName }),
   setInstanceState: instanceState => set({ instanceState }),
   setPollingError: pollingError => set({ pollingError }),

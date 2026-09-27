@@ -25,11 +25,24 @@ export function isNotificationFromChat(
   expectedChatId: string,
 ) {
   const expected = normalizeChatId(expectedChatId)
-  const senderIds = [body.senderData?.chatId, body.senderData?.sender]
+  const expectedPhone = normalizePhone(expectedChatId)
+  const senderIds = [
+    body.chatId,
+    body.senderData?.chatId,
+    body.senderData?.sender,
+  ]
 
-  return senderIds.some(senderId => normalizeChatId(senderId) === expected)
+  return (
+    senderIds.some(senderId => normalizeChatId(senderId) === expected) ||
+    (Boolean(expectedPhone) &&
+      normalizePhone(body.senderData?.senderPhoneNumber) === expectedPhone)
+  )
 }
 
 function normalizeChatId(chatId?: string) {
   return chatId?.trim().toLowerCase() ?? ''
+}
+
+function normalizePhone(value?: string | number) {
+  return String(value ?? '').replace(/\D/g, '')
 }

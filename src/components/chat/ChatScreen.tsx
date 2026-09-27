@@ -1,6 +1,7 @@
 import { useContactInfo } from '../../hooks/useContactInfo'
 import { useInstanceState } from '../../hooks/useInstanceState'
 import { useSendMessage } from '../../hooks/useSendMessage'
+import { useTypingNotification } from '../../hooks/useTypingNotification'
 import { getApiErrorMessage } from '../../services/greenApi'
 import { useChatStore } from '../../store/chatStore'
 import { ChatHeader } from './ChatHeader'
@@ -20,6 +21,7 @@ export function ChatScreen({ onDisconnect }: ChatScreenProps) {
   const contactQuery = useContactInfo()
   const instanceStateQuery = useInstanceState()
   const sendMutation = useSendMessage()
+  const notifyTyping = useTypingNotification()
   const contactName =
     recipientName ||
     contactQuery.data?.contactName?.trim() ||
@@ -45,6 +47,7 @@ export function ChatScreen({ onDisconnect }: ChatScreenProps) {
         error={sendError || pollingError}
         isSending={sendMutation.isPending}
         onSend={text => sendMutation.mutateAsync(text).then(() => undefined)}
+        onTyping={notifyTyping}
       />
     </main>
   )

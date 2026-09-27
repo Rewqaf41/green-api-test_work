@@ -18,6 +18,7 @@ export function useSendMessage() {
         text,
         direction: 'outgoing',
         timestamp: Date.now(),
+        status: 'sent',
       })
     },
   })

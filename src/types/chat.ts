@@ -8,6 +8,15 @@ export type ConnectionData = GreenApiConfig & {
   chatId: string
 }
 
+export type MessageStatus =
+  | 'pending'
+  | 'sent'
+  | 'delivered'
+  | 'read'
+  | 'failed'
+  | 'noAccount'
+  | 'notInGroup'
+
 export type InstanceState =
   | 'notAuthorized'
   | 'authorized'
@@ -23,6 +32,8 @@ export type ChatMessage = {
   text: string
   direction: 'incoming' | 'outgoing'
   timestamp: number
+  status?: MessageStatus
+  statusDescription?: string
 }
 
 export type SendMessageResponse = {
@@ -46,6 +57,9 @@ export type Notification = {
     typeWebhook?: string
     timestamp?: number
     idMessage?: string
+    chatId?: string
+    status?: MessageStatus
+    description?: string
     stateInstance?: InstanceState
     senderData?: {
       chatId?: string
@@ -53,6 +67,7 @@ export type Notification = {
       chatName?: string
       senderName?: string
       senderContactName?: string
+      senderPhoneNumber?: number
     }
     messageData?: {
       typeMessage?: string

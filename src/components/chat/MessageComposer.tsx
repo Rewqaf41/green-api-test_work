@@ -6,9 +6,15 @@ type MessageComposerProps = {
   error: string
   isSending: boolean
   onSend: (text: string) => Promise<void>
+  onTyping: (text: string) => void
 }
 
-export function MessageComposer({ error, isSending, onSend }: MessageComposerProps) {
+export function MessageComposer({
+  error,
+  isSending,
+  onSend,
+  onTyping,
+}: MessageComposerProps) {
   const [text, setText] = useState('')
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
@@ -30,6 +36,11 @@ export function MessageComposer({ error, isSending, onSend }: MessageComposerPro
     }
   }
 
+  function handleTextChange(value: string) {
+    setText(value)
+    onTyping(value)
+  }
+
   return (
     <footer className="relative z-2 border-t border-[#e7e9f1] bg-white px-[max(10px,calc((100vw-900px)/2))] pt-2.5 pb-2 md:px-[max(20px,calc((100vw-900px)/2))] md:pt-3.5 md:pb-3">
       {error && <div className="mb-2 rounded-[10px] border border-[#ffd9d9] bg-[#fff0f0] px-3 py-[9px] text-[11px] text-[#9d3d3d]" role="alert">{error}</div>}
@@ -37,7 +48,7 @@ export function MessageComposer({ error, isSending, onSend }: MessageComposerPro
         <textarea
           className="max-h-[120px] min-h-10 flex-1 resize-none overflow-y-auto border-0 bg-transparent py-2.5 pr-0 pb-2 text-sm leading-[1.45] text-ink outline-0 placeholder:text-[#a7abba]"
           value={text}
-          onChange={event => setText(event.target.value)}
+          onChange={event => handleTextChange(event.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Сообщение"
           rows={1}

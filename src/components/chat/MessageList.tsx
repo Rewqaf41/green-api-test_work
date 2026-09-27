@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
-import { Check, MessageCircle } from 'lucide-react'
-import type { ChatMessage } from '../../types/chat'
+import { Check, CheckCheck, CircleAlert, MessageCircle } from 'lucide-react'
+import type { ChatMessage, MessageStatus } from '../../types/chat'
 import { formatMessageTime } from '../../utils/date'
 
 type MessageListProps = { messages: ChatMessage[] }
@@ -31,7 +31,12 @@ export function MessageList({ messages }: MessageListProps) {
               <p className="text-sm leading-normal whitespace-pre-wrap [overflow-wrap:anywhere]">{message.text}</p>
               <span className={`mt-[3px] flex items-center justify-end gap-[3px] text-[9px] ${message.direction === 'incoming' ? 'text-[#a2a6b4]' : 'text-white/65'}`}>
                 {formatMessageTime(message.timestamp)}
-                {message.direction === 'outgoing' && <Check className="size-3" aria-hidden="true" />}
+                {message.direction === 'outgoing' && (
+                  <MessageStatusIcon
+                    status={message.status}
+                    description={message.statusDescription}
+                  />
+                )}
               </span>
             </article>
           ))}
@@ -40,4 +45,35 @@ export function MessageList({ messages }: MessageListProps) {
       )}
     </section>
   )
+}
+
+type MessageStatusIconProps = {
+  status?: MessageStatus
+  description?: string
+}
+
+function MessageStatusIcon({ status, description }: MessageStatusIconProps) {
+  if (status === 'read') {
+    return (
+      <CheckCheck
+        className="size-3.5 text-[#9fe6ff]"
+        aria-label="Прочитано"
+      />
+    )
+  }
+
+  if (status === 'delivered') {
+    return <CheckCheck className="size-3.5" aria-label="Доставлено" />
+  }
+
+  if (status === 'failed' || status === 'noAccount' || status === 'notInGroup') {
+    return (
+      <CircleAlert
+        className="size-3 text-[#ffd0d0]"
+        aria-label={description || 'Не удалось отправить'}
+      />
+    )
+  }
+
+  return <Check className="size-3" aria-label="Отправлено" />
 }

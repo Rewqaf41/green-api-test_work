@@ -21,6 +21,7 @@ export function useNotificationPolling() {
   const config = useChatStore(state => state.config)
   const chatId = useChatStore(state => state.chatId)
   const addMessage = useChatStore(state => state.addMessage)
+  const updateMessageStatus = useChatStore(state => state.updateMessageStatus)
   const setRecipientName = useChatStore(state => state.setRecipientName)
   const setInstanceState = useChatStore(state => state.setInstanceState)
   const setPollingError = useChatStore(state => state.setPollingError)
@@ -49,6 +50,18 @@ export function useNotificationPolling() {
 
           if (body.typeWebhook === 'stateInstanceChanged' && body.stateInstance) {
             setInstanceState(body.stateInstance)
+          }
+
+          if (
+            body.typeWebhook === 'outgoingMessageStatus' &&
+            body.idMessage &&
+            body.status
+          ) {
+            updateMessageStatus(
+              body.idMessage,
+              body.status,
+              body.description,
+            )
           }
 
           if (isCurrentChat && text) {
@@ -90,5 +103,6 @@ export function useNotificationPolling() {
     setInstanceState,
     setPollingError,
     setRecipientName,
+    updateMessageStatus,
   ])
 }

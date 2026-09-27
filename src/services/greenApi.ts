@@ -58,6 +58,17 @@ export async function getStateInstance(
   return data
 }
 
+export async function sendTyping(
+  config: GreenApiConfig,
+  chatId: string,
+) {
+  await axios.post(
+    buildMethodUrl(config, 'sendTyping'),
+    { chatId, typingTime: 5_000 },
+    { headers: { 'Content-Type': 'application/json' } },
+  )
+}
+
 export async function receiveNotification(
   config: GreenApiConfig,
   signal: AbortSignal,
